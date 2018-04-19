@@ -1,0 +1,11 @@
+[package]
+name = "rocket-validator"
+version = "0.1.0"
+authors = ["messense <messense@icloud.com>"]
+
+[dependencies]
+rocket = "0.3"
+validator = "0.6"
+
+[badges]
+travis-ci = { repository = "messense/rocket-validator" }
