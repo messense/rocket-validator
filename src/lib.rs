@@ -23,7 +23,7 @@ impl<T> Validation<T> {
 
 impl <T> FromData for Validation<T>
     where T: FromData + Validate,
-          <T as rocket::data::FromData>::Error: Error + 'static
+          <T as FromData>::Error: Error + 'static
 {
     type Error = Box<Error>;
 
