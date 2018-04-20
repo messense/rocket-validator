@@ -7,5 +7,12 @@ authors = ["messense <messense@icloud.com>"]
 rocket = "0.3"
 validator = "0.6"
 
+[dev-dependencies]
+rocket_codegen = "0.3"
+rocket-lenient-json = { git = "https://github.com/messense/rocket-lenient-json.git", branch = "validator", features = ["validator"] }
+serde = "1.0"
+serde_derive = "1.0"
+validator_derive = "0.6"
+
 [badges]
 travis-ci = { repository = "messense/rocket-validator" }
