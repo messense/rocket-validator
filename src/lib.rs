@@ -6,7 +6,7 @@ use std::boxed::Box;
 use std::ops::{Deref, DerefMut};
 
 use rocket::outcome::Outcome;
-use rocket::request::Request;
+use rocket::request::{self, Request, FromRequest};
 use rocket::data::{self, Data, FromData};
 use rocket::http::Status;
 use validator::Validate;
@@ -39,6 +39,27 @@ impl <T> FromData for Validation<T>
                 }
             },
             Failure((status, err)) => Failure((status, Box::new(err))),
+            Forward(data) => Forward(data),
+        }
+    }
+}
+
+impl<'a, 'r, T> FromRequest<'a, 'r> for Validation<T>
+    where T: FromRequest<'a, 'r> + Validate
+{
+    type Error = ();  // FIXME: propagate error?
+
+    fn from_request(request: &'a Request<'r>) -> request::Outcome<Validation<T>, Self::Error> {
+        use Outcome::*;
+        match T::from_request(request) {
+            Success(val) => {
+                if let Err(_) = val.validate() {
+                    Failure((Status::BadRequest, ()))
+                } else {
+                    Success(Validation(val))
+                }
+            },
+            Failure(_) => Failure((Status::BadRequest, ())),
             Forward(data) => Forward(data),
         }
     }
